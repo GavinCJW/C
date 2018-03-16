@@ -1,1 +1,3 @@
 # ZNTG
+
+  mysql路径请自行配置需要在项目中的包含目录和库目录引入mysql的include和lib文件夹，在链接器的输入的附加依赖项中添加libmysql.lib
