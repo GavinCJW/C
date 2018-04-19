@@ -1,14 +1,15 @@
 #pragma once
-#include <vector>
-#include <algorithm>
-#include <random>
-#include "optional.hpp"
 
-#define FUND_NUMBER 61																					//基金数
 #define SHORTLISTED_FUND_NUMBER 3																//入选基金数	
 #define EFFECTIVE_DIGHITS 1000																			//保留有效位数
 #define LIMIT_MAX 10000000																				//循环次数
 #define EFFECTIVE_NUMBER 100																			//保留结果集
+#define RETRACEMENT_MAX 0.08																			//最大回撤率
+
+#include <vector>
+#include <algorithm>
+#include <random>
+#include "optional.hpp"
 
 template <class T>
 class Base {
@@ -384,25 +385,58 @@ class MKWZ {
 		}
 		CDS(ev);
 	}
-public:
-	std::vector<pool> get(std::vector<std::vector<double>> rate) {
+
+	double SharpeRatio(pool ev) {
+		double rf = 4.7945205479452054794520547945205e-5;
+		return (ev.e - rf) / std::sqrt(ev.v) * 365;
+	}
+
+	void operatoin(std::vector<std::vector<double>> rate) {
 		auto factorial = [=](int  n, int m) {
 			size_t r = 1;
-			for (size_t i = n; i > n - m; i--) 
+			for (size_t i = n; i > n - m; i--)
 				r *= i / (n - i + 1);
 			return r;
 		};
 
 		auto num = factorial(FUND_NUMBER, SHORTLISTED_FUND_NUMBER);
-		if (num > 10000000) 
+		if (num > 10000000)
 			this->RandomSearch(rate);
-		else 
+		else
 			this->GlobalSearch(rate);
-
+	}
+public:
+	std::vector<pool> getAllData(std::vector<std::vector<double>> rate) {
 		auto complare = [=](pool a, pool b) {
 			return a.e > b.e;
 		};
+		
+		operatoin(rate);
 		std::sort(this->ret.begin(), this->ret.end(), complare);
 		return this->ret;
+	}
+
+	pool getSpRtData(std::vector<std::vector<double>> rate , std::vector<double>retracement) {
+		auto cprt = [=](std::vector<double>rt, std::vector<int>p, std::vector<double>w) {
+			double r = 0;
+			for (int i = 0; i < p.size(); i++) {
+				r += w[i] * rt[p[i]];
+			}
+			return r;
+		};
+		operatoin(rate);
+
+		pool result = this->ret[0];
+		double sp = 0;
+		for (auto r : this->ret) {
+			if (cprt(retracement, r.p, r.w) < RETRACEMENT_MAX) {
+				auto sp_t = SharpeRatio(r);
+				if (sp_t > sp) {
+					sp = sp_t;
+					result = r;
+				}
+			}
+		}
+		return result;
 	}
 };
