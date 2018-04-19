@@ -15,18 +15,30 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="optional.hpp">
+    <ClInclude Include="cjw.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="mysql.hpp">
+    <ClInclude Include="cjw_format.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="MKWZ.hpp">
+    <ClInclude Include="cjw_http.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cjw_mysql.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cjw_thread_pool.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cjw_transcode.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cjw_windows.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="源.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

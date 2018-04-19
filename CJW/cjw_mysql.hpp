@@ -1,12 +1,11 @@
 #pragma once
 
+#include "cjw.hpp"
 #include <mysql.h>
-#include <vector>
 
-#define MYSQL_LIBRARY_INIT_ERROR -1 //初始化数据库  
-#define MYSQL_INIT_ERROR -2 //初始化数据结构  
-#define MYSQL_SET_CHARSET_NAME_ERROR -3 //设置字符集
-#define MYSQL_REAL_CONNECT_ERROR -4 //连接数据库
+#ifndef _mysql_h
+#error "∑(っ°Д° ;)っ : required mysql.h"
+#endif
 
 struct MyTableValue {
 	unsigned long long number;
@@ -20,28 +19,25 @@ private:
 	MyTableValue res;
 
 public:
-	MySQL() {
+	//const MyTableValue &ret = res;
+	MySQL(char * host, char * user, char * pw, char * db, int port = 0, char * character = "utf8") {
 		if (0 != mysql_library_init(0, NULL, NULL))
-			exit(MYSQL_LIBRARY_INIT_ERROR);
+			_ERROR_(MYSQL_LIBRARY_INIT_ERROR);
 		if (NULL == mysql_init(&this->mMySQL))
-			exit(MYSQL_INIT_ERROR);
-		//...
-	}
-
-	void connect(const char * host, const char * user, const char * pw, const char * db, int port = 0, const char * character = "utf8") {
+			_ERROR_(MYSQL_INIT_ERROR);
 		if (NULL == mysql_real_connect(&this->mMySQL, host, user, pw, db, port, NULL, 0))
-			exit(MYSQL_REAL_CONNECT_ERROR);
+			_ERROR_(MYSQL_REAL_CONNECT_ERROR);
 		if (0 != mysql_set_character_set(&this->mMySQL, character))
-			exit(MYSQL_SET_CHARSET_NAME_ERROR);
+			_ERROR_(MYSQL_SET_CHARSET_NAME_ERROR);
 	}
 
-	bool writeData(const char *query) {
+	bool WriteData(const char *query) {
 		if (0 == mysql_query(&this->mMySQL, query))
 			return true;
 		return false;
 	}
 
-	bool selectData(const char *query) {
+	bool SelectData(const char *query) {
 		if (0 == mysql_query(&this->mMySQL, query)) {
 			MYSQL_RES *result = mysql_store_result(&this->mMySQL);
 			this->res.number = mysql_num_rows(result);
@@ -64,10 +60,12 @@ public:
 		return false;
 	}
 
-	MyTableValue get() { return this->res; }
+	MyTableValue GetRes() { return this->res; }
 
 	~MySQL() {
 		mysql_close(&this->mMySQL);
 		mysql_library_end();
 	}
-}; 
+};
+
+

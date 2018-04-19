@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{DE7378D6-8A02-45C9-9D60-28CE7E5D7EEF}</ProjectGuid>
-    <RootNamespace>ZNTG</RootNamespace>
+    <ProjectGuid>{14473738-2ED1-498C-A254-F981B76B363B}</ProjectGuid>
+    <RootNamespace>CJW</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -68,14 +68,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>E:\mysql-5.7.19-winx64\include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\mysql-5.7.19-winx64\lib;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>E:\mysql-5.7.19-winx64\include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\mysql-5.7.19-winx64\lib;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>E:\mysql-5.7.19-winx64\include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\mysql-5.7.19-winx64\lib;$(LibraryPath)</LibraryPath>
@@ -90,9 +82,6 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
-    <Link>
-      <AdditionalDependencies>libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -115,7 +104,6 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -133,12 +121,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="MKWZ.hpp" />
-    <ClInclude Include="mysql.hpp" />
-    <ClInclude Include="optional.hpp" />
+    <ClInclude Include="cjw.hpp" />
+    <ClInclude Include="cjw_format.hpp" />
+    <ClInclude Include="cjw_http.hpp" />
+    <ClInclude Include="cjw_mysql.hpp" />
+    <ClInclude Include="cjw_thread_pool.hpp" />
+    <ClInclude Include="cjw_transcode.hpp" />
+    <ClInclude Include="cjw_windows.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="源.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
