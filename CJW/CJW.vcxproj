@@ -122,9 +122,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="cjw.hpp" />
+    <ClInclude Include="cjw_des.hpp" />
     <ClInclude Include="cjw_format.hpp" />
     <ClInclude Include="cjw_http.hpp" />
     <ClInclude Include="cjw_mysql.hpp" />
+    <ClInclude Include="cjw_socket.hpp" />
     <ClInclude Include="cjw_thread_pool.hpp" />
     <ClInclude Include="cjw_transcode.hpp" />
     <ClInclude Include="cjw_windows.hpp" />

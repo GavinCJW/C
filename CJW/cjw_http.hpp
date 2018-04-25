@@ -1,8 +1,6 @@
 #pragma once
 
 #include"cjw.hpp"
-#include <WS2tcpip.h>
-#pragma comment(lib, "ws2_32.lib")  
 
 #define SEND_LENGTH 1024
 #define RCV_LENGTH 2048

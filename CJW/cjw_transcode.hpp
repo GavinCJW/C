@@ -1,9 +1,8 @@
 #pragma once
 
 #include"cjw.hpp"
-#include <windows.h>   
 
-
+//编码转换
 class Unicode {
 private:
 
@@ -94,5 +93,55 @@ public:
 				}
 		}
 		return _decode_result;
+	}
+};
+
+//进制转换
+class Converter {
+private:
+
+public:
+	static std::string BTH(const std::string strBin, bool bIsUpper = false){
+		std::string strHex;
+		auto number = strBin.size();
+		strHex.resize(number * 2);
+		for (unsigned long long i = 0; i < number; i++){
+			unsigned char cTemp = strBin[i];
+			for (unsigned long long j = 0; j < 2; j++){
+				unsigned char cCur = (cTemp & 0x0f);
+				if (cCur < 10)
+					cCur += '0';
+				else
+					cCur += ((bIsUpper ? 'A' : 'a') - 10);
+				strHex[2 * i + 1 - j] = cCur;
+				cTemp >>= 4;
+			}
+		}
+		return strHex;
+	}
+
+	static std::string HTB(const std::string &strHex){
+		if (strHex.size() % 2 != 0)
+			return "";
+
+		std::string strBin;
+		strBin.resize(strHex.size() / 2);
+		auto number = strBin.size();
+		for (unsigned long long i = 0; i < number; i++){
+			unsigned char cTemp = 0;
+			for (unsigned long long j = 0; j < 2; j++){
+				char cCur = strHex[2 * i + j];
+				if (cCur >= '0' && cCur <= '9')
+					cTemp = (cTemp << 4) + (cCur - '0');
+				else if (cCur >= 'a' && cCur <= 'f')
+					cTemp = (cTemp << 4) + (cCur - 'a' + 10);
+				else if (cCur >= 'A' && cCur <= 'F')
+					cTemp = (cTemp << 4) + (cCur - 'A' + 10);
+				else
+					return "";
+			}
+			strBin[i] = cTemp;
+		}
+		return strBin;
 	}
 };

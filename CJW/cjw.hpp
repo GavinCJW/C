@@ -1,6 +1,11 @@
+#pragma once
 #pragma warning( disable : 4996 )
 #pragma warning( disable : 4091 )
 
+#include <WS2tcpip.h>
+#pragma comment(lib, "ws2_32.lib")  
+#include <mysql.h>
+#include <windows.h>   
 #include <vector>
 #include <memory>
 #include <string>
@@ -43,6 +48,8 @@
 #define HTTP_SOKET_ERROR "HTTP_SOKET_ERROR"
 #define HTTP_CONNECT_ERROR "HTTP_CONNECT_ERROR"
 #define HTTP_SEND_ERROR "HTTP_SEND_ERROR"
+
+#define  ENCRYPT_DATA_ERROR "ENCRYPT_DATA_ERROR"
 
 #define _ERROR_(E) Exception::ExceptionHandler(E)
 

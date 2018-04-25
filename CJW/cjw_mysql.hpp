@@ -1,7 +1,6 @@
 #pragma once
 
 #include "cjw.hpp"
-#include <mysql.h>
 
 #ifndef _mysql_h
 #error "б╞(д├бузебу ;)д├ : required mysql.h"
