@@ -6,9 +6,9 @@
 
 int main() {
 	
-	std::string server_key = "123456";
-	
-	std::cout << std::hex << Converter::HTB(Converter::BTH( SHA::SHA1(server_key))) << std::endl;
+	std::string encrypt = "12345";
+	std::cout << Converter::BTH(DES::MD5(encrypt));
+
 
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 	system("pause");
