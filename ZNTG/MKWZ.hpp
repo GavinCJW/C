@@ -1,10 +1,10 @@
 #pragma once
 
-#define SHORTLISTED_FUND_NUMBER 3																//入选基金数	
 #define EFFECTIVE_DIGHITS 1000																			//保留有效位数
 #define LIMIT_MAX 10000000																				//循环次数
 #define EFFECTIVE_NUMBER 100																			//保留结果集
 #define RETRACEMENT_MAX 0.08																			//最大回撤率
+#define ED 0.01																										//最小权重幅度
 
 #include <vector>
 #include <algorithm>
@@ -99,15 +99,29 @@ public:
 		return arr;
 	}
 	/*返回累加为固定值的随机数组*/
-	std::vector<int> arrRdCC(int constant , int range) {
+	std::vector<int> arrRdCC(int constant, int range) {
 		std::vector<int> arr(range);
 		std::random_device rd;
 		std::mt19937 mt(rd());
+		auto temp = constant;
 		for (int i = 0; i < range; i++) {
-			arr[i] = mt() % (constant / 2)+1;
-			constant -= arr[i];
+			arr[i] = mt() % (constant / range) + 1;
+			temp -= arr[i];
 		}
-		arr[mt() % range] += constant;
+		while (temp != 0) {
+			for (int i = 0; i < range; i++) {
+				if (arr[i] + temp < constant / 2) {
+					arr[i] += temp;
+					temp = 0;
+					break;
+				}
+				else {
+					auto t = mt() % (temp / range);
+					arr[i] += t;
+					temp -= t;
+				}
+			}
+		}
 		return arr;
 	}
 	/*返回随机数*/
@@ -200,13 +214,38 @@ public:
 	}
 
 	/*更新求导取最小值函数*/
-	void derivation(int x, int y , int range) {
+	void derivation(int x, int y) {
 		double extremum = (this->w_var_arr[y] - this->w_var_arr[x]) / (this->cov[x][x] - 2 * this->cov[x][y] + this->cov[y][y]);
-		double nExp, nVar;
-		double max =weight[y] - (1.0 / range),  min = (1.0 / range) - weight[x];
-		double rise = extremum > max ? max : (extremum < min ? min : extremum);
+		double nExp, nVar  , rise;
+		if (weight[x] + weight[y] > 0.5 ) {
+			rise = extremum > 0.5 - ED ? 0.5 - weight[x] - ED :
+				(extremum < weight[x] + weight[y] - 0.5 ? weight[y] - 0.5: extremum - weight[x]);
+		}else {
+			rise = extremum > weight[x] + weight[y] - ED ? weight[y] - ED :
+				(extremum < ED ? ED - weight[x] : extremum - weight[x]);
+		}
 		recalculate(rise, x, y, nExp, nVar);
 		renew(rise, x, y, nExp, nVar);
+	}
+
+	//迭代
+	void optimum(int x,int y) {
+		double nExp, nVar, min, max;
+		if (weight[x] + weight[y] > 0.5) {
+			min = weight[y] - 0.5 + ED;
+			max = 0.5 - weight[x] - ED;
+		}else {
+			min = ED - weight[x];
+			max = weight[y] - ED;
+		}
+		double e = -99999, v = -99999, r = -99999;
+		for (double rise = min; rise < max; rise += 0.01) {
+			recalculate(rise, x, y, nExp, nVar);
+			if (nExp > e) {
+				e = nExp; v = nVar; r = rise;
+			}
+		}
+		renew(r, x, y, e, v);
 	}
 
 	double maxEXP() {
@@ -250,7 +289,6 @@ public:
 		return w;
 	}
 };
-
 
 class MKWZ {
 	struct pool {
@@ -320,7 +358,10 @@ class MKWZ {
 			auto position = ev.getPosition();
 			for (int i = SHORTLISTED_FUND_NUMBER -1; i > 0; i--) {
 				for (int j = i - 1; j > -1; j--) {
-					ev.derivation(position[i], position[j], EFFECTIVE_DIGHITS);
+					//求导去最值
+					//ev.derivation(position[i], position[j]);
+					//迭代
+					ev.optimum(position[i], position[j]);
 					pool pool_temp(ev);
 					ret.push_back(pool_temp);
 				}
@@ -367,7 +408,10 @@ class MKWZ {
 			auto p = ev.getPosition();
 			for (int i = SHORTLISTED_FUND_NUMBER -1; i > 0; i--) {
 				for (int j = i - 1; j > -1; j--) {
-					ev.derivation(p[i], p[j], EFFECTIVE_DIGHITS);
+					//求导去最值
+					//ev.derivation(p[i], p[j]);
+					//迭代
+					ev.optimum(p[i], p[j]);
 					pool pool_temp(ev);
 					ret.push_back(pool_temp);
 				}
