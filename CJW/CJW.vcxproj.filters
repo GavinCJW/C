@@ -42,6 +42,9 @@
     <ClInclude Include="cjw_des.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="cjw_optional.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

@@ -10,7 +10,7 @@ private:
 
 public:
 	inline HTTP() = delete;
-	static std::string ReturnData(int type, char * ipAddr, char * host, int port, char * msg) {
+	static std::string ReturnData(char * ipAddr, char * host, int port, char * msg, bool type = true ) {
 		SOCKET mSocket;
 		WSADATA mWsaData;
 		SOCKADDR_IN mSockAddr;
@@ -31,13 +31,13 @@ public:
 		if ((connect(mSocket, (struct sockaddr *)&mSockAddr, sizeof(mSockAddr))) < 0)
 			_ERROR_(HTTP_CONNECT_ERROR);
 
-		if (type == 1) 
+		if (type) 
 			sendBuf = "POST "+std::string(ipAddr)+" HTTP/1.1\r\n"
 				"Host: "+ std::string(host) +":"+std::to_string(port)+"\r\n"
 				"Content-Length: "+std::to_string(strlen(msg))+"\r\n"
 				"\r\n"
 				+std::string(msg);
-		else if (type == 2) 
+		else 
 			sendBuf = "GET " + std::string(ipAddr) + "?" + std::string(msg) + " HTTP/1.1\r\n"
 				"Host: " + std::string(host) + ":" + std::to_string(port) + "\r\n"
 				"\r\n";

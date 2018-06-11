@@ -9,7 +9,7 @@ public:
 		unsigned char Message_Block[64];    // 512-bit message blocks
 		bool Corrupted = false;
 		// 处理接下来512位数据的信息
-		auto ProcessMessageBlock = [&]() {
+		auto ProcessMessage = [&]() {
 			// SHA-1 常量
 			const unsigned K[] = { 0x5A827999,0x6ED9EBA1,0x8F1BBCDC,0xCA62C1D6 };
 			unsigned list[80], buffer[5];
@@ -66,12 +66,12 @@ public:
 			Message_Block_Index = 0;
 		};
 		//填充数据至512位
-		auto PadMessage = [&]() {
+		auto FillMessage = [&]() {
 			Message_Block[Message_Block_Index] = 0x80;
 			if (Message_Block_Index++ > 55) {
 				while (Message_Block_Index < 64)
 					Message_Block[Message_Block_Index++] = 0;
-				ProcessMessageBlock();
+				ProcessMessage();
 			}
 			while (Message_Block_Index < 56)
 				Message_Block[Message_Block_Index++] = 0;
@@ -81,7 +81,7 @@ public:
 				Message_Block[56 + i] = (Length_High >> j) & 0xFF;
 				Message_Block[60 + i] = (Length_Low >> j) & 0xFF;
 			}
-			ProcessMessageBlock();
+			ProcessMessage();
 		};
 
 		auto str = (const unsigned char*)message.data();
@@ -94,10 +94,10 @@ public:
 					_ERROR_(ENCRYPT_DATA_ERROR);
 			}
 			if (Message_Block_Index == 64)
-				ProcessMessageBlock();
+				ProcessMessage();
 			str++;
 		}
-		PadMessage();
+		FillMessage();
 		//将主机数转换成无符号长整型的网络字节顺序，（将可能以小端储存的主机数换成大端存储）
 		for (int i = 0; i < 5; i++)
 			Message_Digest[i] = htonl(H[i]);
@@ -108,7 +108,7 @@ public:
 	static std::string MD5(std::string message,bool flag = false) {
 		unsigned count[2] = { 0 }, state[4] = { 0x67452301 ,0xEFCDAB89 ,0x98BADCFE ,0x10325476 };
 		unsigned char buffer[64], bits[8], result[16];
-		unsigned char PADDING[] = {
+		unsigned char padding[] = {
 			0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -228,7 +228,7 @@ public:
 		MD5Update((unsigned char *)message.data(), strlen(message.data()));
 		MD5Encode(bits, count, 8);
 		auto temp = (count[0] >> 3) & 0x3F;
-		MD5Update(PADDING, (temp < 56) ? (56 - temp) : (120 - temp));
+		MD5Update(padding, (temp < 56) ? (56 - temp) : (120 - temp));
 		MD5Update(bits, 8);
 		MD5Encode(result, state, 16);
 
