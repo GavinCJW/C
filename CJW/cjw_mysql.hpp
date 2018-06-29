@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cjw.hpp"
+#include "cjw_optional.hpp"
 
 #ifndef _mysql_h
 #error "б╞(д├бузебу ;)д├ : required mysql.h"
@@ -15,7 +16,6 @@ struct MyTableValue {
 class MySQL {
 private:
 	MYSQL mMySQL;
-	MyTableValue res;
 
 public:
 	//const MyTableValue &ret = res;
@@ -36,30 +36,29 @@ public:
 		return false;
 	}
 
-	bool SelectData(const char *query) {
+	Optional<MyTableValue> SelectData(const char *query) {
+		MyTableValue res;
 		if (0 == mysql_query(&this->mMySQL, query)) {
 			MYSQL_RES *result = mysql_store_result(&this->mMySQL);
-			this->res.number = mysql_num_rows(result);
+			res.number = mysql_num_rows(result);
 
 			unsigned int fieldcount = mysql_num_fields(result);
 			for (unsigned int i = 0; i < fieldcount; i++)
-				this->res.key.push_back(mysql_fetch_field_direct(result, i)->name);
+				res.key.push_back(mysql_fetch_field_direct(result, i)->name);
 
 			MYSQL_ROW row = NULL;
 			while (NULL != (row = mysql_fetch_row(result))) {
 				std::vector<std::string> value;
 				for (unsigned int i = 0; i < fieldcount; i++)
 					value.push_back(row[i] == NULL ? "" : row[i]);
-				this->res.value.push_back(value);
+				res.value.push_back(value);
 			}
 
 			mysql_free_result(result);
-			return true;
+			return res;
 		}
-		return false;
+		return Optional<MyTableValue>();
 	}
-
-	MyTableValue GetRes() { return this->res; }
 
 	~MySQL() {
 		mysql_close(&this->mMySQL);

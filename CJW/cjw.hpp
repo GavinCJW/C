@@ -7,6 +7,7 @@
 #include <mysql.h>
 #include <windows.h>   
 #include <vector>
+#include <map>
 #include <memory>
 #include <string>
 #include <ctime>
@@ -44,6 +45,9 @@
 #define MYSQL_INIT_ERROR "MYSQL_INIT_ERROR" //初始化数据结构  
 #define MYSQL_SET_CHARSET_NAME_ERROR "MYSQL_SET_CHARSET_NAME_ERROR" //设置字符集
 #define MYSQL_REAL_CONNECT_ERROR "MYSQL_REAL_CONNECT_ERROR" //连接数据库
+
+#define SQLLITE_OPENDB_ERROR "SQLLITE_OPENDB_ERROR"//打开数据库
+#define SQLLITE_WRITE_ERROR "SQLLITE_WRITE_ERROR"//数据库写入
 	
 #define HTTP_SOKET_ERROR "HTTP_SOKET_ERROR"
 #define HTTP_CONNECT_ERROR "HTTP_CONNECT_ERROR"
