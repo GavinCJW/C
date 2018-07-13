@@ -29,7 +29,7 @@ public:
 		return false;
 	}
 
-	Optional<MyTableValue> SelectData(const char *query) {
+	Optional<MyTableValue> SelectData(std::string query) {
 		char * msg;
 		MyTableValue ret;
 		ret.number = 0;
@@ -43,7 +43,7 @@ public:
 			ret->number++;
 			return 0;
 		}; 
-		if (SQLITE_OK == sqlite3_exec(DB, query, result, (void*)&ret, &msg)) 
+		if (SQLITE_OK == sqlite3_exec(DB, query.data(), result, (void*)&ret, &msg)) 
 			return ret;		
 		_ERROR_(SQLLITE_WRITE_ERROR);
 		return Optional<MyTableValue>();

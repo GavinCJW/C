@@ -1,10 +1,31 @@
 #include <iostream>
-
+#include "cjw_des.hpp"
 #include "cjw_sqllite.hpp"
+
+class A {
+public:
+	A() {
+		std::cout << "A";
+		this->~A();
+	}
+	~A() {
+		std::cout << "B";
+	}
+};
+
+template<class T>
+bool IS_TYPE(T key, std::vector<T> val) {
+	for each (auto var in val) {
+		if (key == var)
+			return true;
+	}
+	return false;
+};
+
 
 int main() {
 	
-	SqlLite sl("test.db");
+	/*SqlLite sl("test.db");
 
 	char * sql = "CREATE TABLE COMPANY("  \
 		"ID INT PRIMARY KEY     NOT NULL," \
@@ -35,8 +56,16 @@ int main() {
 			std::cout << i.first << " : " << i.second << std::endl;
 
 		std::cout << std::endl;
-	}
+	}*/
 
+	auto fun = [](int key , std::vector<int> val) {
+		for each (auto var in val){
+			if (key == var)
+				return true;
+		}
+		return false;
+	};
+	std::cout<<(IS_TYPE(1, { 1,2,3,4 }));
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 	system("pause");
 	return 0;
