@@ -1,3 +1,5 @@
+#define SQLITE_ENABLE_RTREE
+#define SQLITE_ENABLE_COLUMN_METADATA
 #include "cjw.hpp"
 #include "cjw_optional.hpp"
 extern "C"
