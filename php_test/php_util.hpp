@@ -17,7 +17,7 @@ bool IN_TYPE(T key, std::vector<T> val) {
 MAP  ZEND_ARRAY_TO_MAP(zend_array *arr) {
 	MAP ret;
 	auto array_count = zend_hash_num_elements(arr);
-	for (auto i = 0; i < array_count; i++) {
+	for (uint32_t i = 0; i < array_count; i++) {
 		auto val = arr->arData[i].val;
 		auto key = arr->arData[i].key;
 		if (IN_TYPE(Z_TYPE_P(&val), { IS_STRING,IS_LONG,IS_DOUBLE })) {

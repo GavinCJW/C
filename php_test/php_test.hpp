@@ -7,7 +7,11 @@
 #define PHP_TEST_H
 
 #ifdef PHP_WIN32  
+#ifdef PHP_TEST_API_IMPORT
+#define PHP_TEST_API __declspec(dllimport)
+#else
 #define PHP_TEST_API __declspec(dllexport)
+#endif
 #define _STATIC_ASSERT(expr) typedef char __static_assert_t[ (expr)?(expr):1 ]  
 #elif defined(__GNUC__) && __GNUC__ >= 4
 #define PHP_PHPTest_API __attribute__ ((visibility("default")))
